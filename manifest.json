@@ -1,15 +1,21 @@
 {
   "name": "Sportwoche 2025 – Orga Planer",
-  "short_name": "Sportwoche 2025",
-  "start_url": ".",
+  "short_name": "Sportwoche",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
-   
-::contentReference[oaicite:1]{index=1}
- 
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

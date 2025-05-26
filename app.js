@@ -69,7 +69,7 @@ function renderPlan() {
     dayCard.appendChild(dayHeader);
 
     list.forEach((item, i) => {
-      const key = `${day.replace(/[\s,]/g, '_')}_${i}`;
+      const key = `${day.replace(/[\s,.]/g, '_')}_${i}`;
       const dbRef = ref(db, 'events/' + key);
 
       const eventEl = document.createElement('div');
