@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sportwoche 2025 – Orga Planer</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <meta name="theme-color" content="#007bff" />
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <h1>📅 Sportwoche 2025 – Orga Planer</h1>
+    </header>
+
+    <main id="week-plan" class="week-plan">
+      <!-- Inhalte durch app.js -->
+    </main>
+  </div>
+
+  <!-- Service Worker für PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('✅ Service Worker aktiv'))
+        .catch(err => console.error('❌ Fehler beim Service Worker:', err));
+    }
+  </script>
+
+  <!-- Hauptscript -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

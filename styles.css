@@ -1,0 +1,135 @@
+:root {
+  --primary: #007bff;
+  --primary-light: #e7f1ff;
+  --success: #28a745;
+  --bg: #f4f6f8;
+  --text: #212529;
+  --muted: #6c757d;
+  --radius: 8px;
+  --shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  --font: "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.app-shell {
+  max-width: 960px;
+  margin: auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  background-color: var(--primary);
+  color: white;
+  padding: 20px 10px;
+  border-radius: var(--radius);
+}
+
+header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.day-card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.day-header {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 12px 16px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-bottom: 1px solid #dbe3ef;
+}
+
+.event {
+  border-top: 1px solid #eee;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.event:first-of-type {
+  border-top: none;
+}
+
+.event-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  background-color: #fff;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+button {
+  padding: 10px 16px;
+  background-color: var(--success);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1e7e34;
+}
+
+.notes {
+  background: var(--primary-light);
+  padding: 10px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.note-entry {
+  margin-bottom: 8px;
+  border-left: 3px solid var(--primary);
+  padding-left: 10px;
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  .input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  button {
+    width: 100%;
+  }
+}
