@@ -1,10 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import { getDatabase, ref, onValue, set, get, child } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
-// Firebase-Konfiguration
+// 🔐 Deine Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyBvDHcYfeQdIwmXd3qnF97K-PQKH4NICf0",
   authDomain: "sportwoche-sv-langen.firebaseapp.com",
+  databaseURL: "https://sportwoche-sv-langen-default-rtdb.europe-west1.firebasedatabase.app/",
   projectId: "sportwoche-sv-langen",
   storageBucket: "sportwoche-sv-langen.firebasestorage.app",
   messagingSenderId: "529824987070",
@@ -14,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🔧 Hilfsfunktion zur Pfadbereinigung
+// 🔧 Hilfe: gültige Firebase-Schlüssel erzeugen
 function sanitizeKey(input) {
   return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
 }
@@ -25,7 +26,7 @@ function formatTime(ts) {
   return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
-// 🔧 Event-Daten
+// 📅 Tages-Events
 const events = {
   "Dienstag, 15.07.2025": [
     { time: "19:00", title: "Herrenspiele höhere Klassen" },
@@ -101,7 +102,6 @@ function renderPlan() {
       const notes = document.createElement('div');
       notes.className = 'notes';
 
-      // Daten laden
       onValue(dbRef, snapshot => {
         const data = snapshot.val() || { responsible: "", notes: [] };
         responsible.value = data.responsible || '';
@@ -114,30 +114,23 @@ function renderPlan() {
         });
       });
 
-      // Speichern
       saveBtn.onclick = async () => {
         const noteText = note.value.trim();
         const newNote = { text: noteText, timestamp: Date.now() };
 
-        try {
-          const snapshot = await get(dbRef);
-          const data = snapshot.val() || { responsible: "", notes: [] };
+        const snapshot = await get(dbRef);
+        const data = snapshot.val() || { responsible: "", notes: [] };
+        const updated = {
+          responsible: responsible.value,
+          notes: data.notes || []
+        };
 
-          const updated = {
-            responsible: responsible.value,
-            notes: data.notes || []
-          };
-
-          if (noteText) {
-            updated.notes.push(newNote);
-          }
-
-          await set(dbRef, updated);
-          note.value = '';
-          console.log("✅ gespeichert", updated);
-        } catch (err) {
-          console.error("❌ Fehler beim Speichern:", err);
+        if (noteText) {
+          updated.notes.push(newNote);
         }
+
+        await set(dbRef, updated);
+        note.value = '';
       };
 
       grid.appendChild(responsible);

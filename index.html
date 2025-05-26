@@ -16,7 +16,7 @@
     </header>
 
     <main id="week-plan" class="week-plan">
-      <!-- Inhalte durch app.js -->
+      <!-- Inhalte werden von app.js erzeugt -->
     </main>
   </div>
 
@@ -24,12 +24,12 @@
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('✅ Service Worker aktiv'))
-        .catch(err => console.error('❌ Fehler beim Service Worker:', err));
+        .then(() => console.log('✅ Service Worker aktiviert'))
+        .catch(err => console.error('❌ Service Worker Fehler:', err));
     }
   </script>
 
-  <!-- Hauptscript -->
+  <!-- Haupt-JavaScript mit ES-Modul -->
   <script type="module" src="app.js"></script>
 </body>
 </html>

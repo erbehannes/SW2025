@@ -2,8 +2,8 @@ const cacheName = 'sportwoche-cache-v1';
 const filesToCache = [
   './',
   './index.html',
-  './styles.css',
   './app.js',
+  './styles.css',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
