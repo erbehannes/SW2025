@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, get, child } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
 // Firebase-Konfiguration
 const firebaseConfig = {
@@ -14,7 +14,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Zeitplan
+// 🔧 Hilfsfunktion zur Pfadbereinigung
+function sanitizeKey(input) {
+  return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
+}
+
+// 🔧 Zeit formatieren
+function formatTime(ts) {
+  const d = new Date(ts);
+  return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+// 🔧 Event-Daten
 const events = {
   "Dienstag, 15.07.2025": [
     { time: "19:00", title: "Herrenspiele höhere Klassen" },
@@ -50,15 +61,6 @@ const events = {
   ]
 };
 
-function formatTime(ts) {
-  const d = new Date(ts);
-  return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
-}
-
-function sanitizeKey(input) {
-  return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
-}
-
 function renderPlan() {
   const container = document.getElementById('week-plan');
   container.innerHTML = '';
@@ -74,7 +76,7 @@ function renderPlan() {
 
     list.forEach((item, i) => {
       const key = `${sanitizeKey(day)}_${i}`;
-      const dbRef = ref(db, 'events/' + key);
+      const dbRef = ref(db, `events/${key}`);
 
       const eventEl = document.createElement('div');
       eventEl.className = 'event';
@@ -99,6 +101,7 @@ function renderPlan() {
       const notes = document.createElement('div');
       notes.className = 'notes';
 
+      // Daten laden
       onValue(dbRef, snapshot => {
         const data = snapshot.val() || { responsible: "", notes: [] };
         responsible.value = data.responsible || '';
@@ -111,22 +114,30 @@ function renderPlan() {
         });
       });
 
-      saveBtn.onclick = () => {
+      // Speichern
+      saveBtn.onclick = async () => {
         const noteText = note.value.trim();
-        onValue(dbRef, snapshot => {
+        const newNote = { text: noteText, timestamp: Date.now() };
+
+        try {
+          const snapshot = await get(dbRef);
           const data = snapshot.val() || { responsible: "", notes: [] };
+
           const updated = {
             responsible: responsible.value,
             notes: data.notes || []
           };
+
           if (noteText) {
-            updated.notes.push({ text: noteText, timestamp: Date.now() });
+            updated.notes.push(newNote);
           }
 
-          console.log("📤 Sende an Firebase:", updated);
-          set(dbRef, updated);
+          await set(dbRef, updated);
           note.value = '';
-        }, { onlyOnce: true });
+          console.log("✅ gespeichert", updated);
+        } catch (err) {
+          console.error("❌ Fehler beim Speichern:", err);
+        }
       };
 
       grid.appendChild(responsible);
