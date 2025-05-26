@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
-// 🔐 Deine Firebase-Konfiguration
+// 🔐 Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyBvDHcYfeQdIwmXd3qnF97K-PQKH4NICf0",
   authDomain: "sportwoche-sv-langen.firebaseapp.com",
@@ -15,18 +15,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🔧 Hilfe: gültige Firebase-Schlüssel erzeugen
+// 🔧 Hilfsfunktionen
 function sanitizeKey(input) {
   return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
 }
 
-// 🔧 Zeit formatieren
 function formatTime(ts) {
   const d = new Date(ts);
   return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
-// 📅 Tages-Events
+// 📅 Event-Daten
 const events = {
   "Dienstag, 15.07.2025": [
     { time: "19:00", title: "Herrenspiele höhere Klassen" },
@@ -102,18 +101,43 @@ function renderPlan() {
       const notes = document.createElement('div');
       notes.className = 'notes';
 
+      // 🔁 Daten laden & anzeigen
       onValue(dbRef, snapshot => {
         const data = snapshot.val() || { responsible: "", notes: [] };
         responsible.value = data.responsible || '';
         notes.innerHTML = '';
-        (data.notes || []).forEach(n => {
+        (data.notes || []).forEach((n, index) => {
           const p = document.createElement('div');
           p.className = 'note-entry';
-          p.innerHTML = `<strong>${formatTime(n.timestamp)}:</strong> ${n.text}`;
+          const timeText = `<strong>${formatTime(n.timestamp)}:</strong> ${n.text}`;
+
+          const delBtn = document.createElement('button');
+          delBtn.textContent = '🗑️';
+          delBtn.style.marginLeft = '10px';
+          delBtn.style.background = 'none';
+          delBtn.style.border = 'none';
+          delBtn.style.cursor = 'pointer';
+          delBtn.title = 'Notiz löschen';
+
+          delBtn.onclick = async () => {
+            const confirmDel = confirm("Willst du diese Notiz wirklich löschen?");
+            if (!confirmDel) return;
+
+            const snap = await get(dbRef);
+            const d = snap.val();
+            if (d && d.notes) {
+              d.notes.splice(index, 1); // entfernen
+              await set(dbRef, d); // speichern
+            }
+          };
+
+          p.innerHTML = timeText;
+          p.appendChild(delBtn);
           notes.appendChild(p);
         });
       });
 
+      // 🔁 Speichern
       saveBtn.onclick = async () => {
         const noteText = note.value.trim();
         const newNote = { text: noteText, timestamp: Date.now() };
