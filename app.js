@@ -55,6 +55,10 @@ function formatTime(ts) {
   return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
+function sanitizeKey(input) {
+  return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
+}
+
 function renderPlan() {
   const container = document.getElementById('week-plan');
   container.innerHTML = '';
@@ -69,7 +73,7 @@ function renderPlan() {
     dayCard.appendChild(dayHeader);
 
     list.forEach((item, i) => {
-      const key = `${day.replace(/[\s,.]/g, '_')}_${i}`;
+      const key = `${sanitizeKey(day)}_${i}`;
       const dbRef = ref(db, 'events/' + key);
 
       const eventEl = document.createElement('div');
@@ -118,6 +122,8 @@ function renderPlan() {
           if (noteText) {
             updated.notes.push({ text: noteText, timestamp: Date.now() });
           }
+
+          console.log("📤 Sende an Firebase:", updated);
           set(dbRef, updated);
           note.value = '';
         }, { onlyOnce: true });
