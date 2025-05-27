@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
-// Firebase Config
+// Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyBvDHcYfeQdIwmXd3qnF97K-PQKH4NICf0",
   authDomain: "sportwoche-sv-langen.firebaseapp.com",
@@ -15,6 +15,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// Seiten-Kontext definieren
+const pageContext = window.location.pathname.includes("helfer")
+  ? "helfer"
+  : window.location.pathname.includes("verpflegung")
+    ? "verpflegung"
+    : "orga";
+
+// Hilfsfunktionen
 function sanitizeKey(input) {
   return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
 }
@@ -24,7 +32,7 @@ function formatTime(ts) {
   return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
-// ✅ Komplette Eventstruktur aus dem Flyer
+// Eventdaten aus dem Flyer
 const events = {
   "Dienstag, 15.07.2025": [
     { time: "19:00", title: "Herrenspiele höhere Klassen" },
@@ -84,7 +92,7 @@ function renderPlan() {
     dayCard.appendChild(dayHeader);
 
     list.forEach((item, i) => {
-      const key = `${anchorId}_${i}`;
+      const key = `${pageContext}/${anchorId}_${i}`;
       const dbRef = ref(db, `events/${key}`);
 
       const eventEl = document.createElement('div');
@@ -174,7 +182,7 @@ function renderPlan() {
   };
 }
 
-// 🔼 Scroll to top
+// Scroll-Button
 const backBtn = document.getElementById('backToTop');
 window.addEventListener('scroll', () => {
   backBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
