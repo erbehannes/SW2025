@@ -24,19 +24,74 @@ body {
   padding: 20px;
 }
 
-header {
-  text-align: center;
-  background-color: var(--primary);
-  color: white;
-  padding: 20px 10px;
+/* Header + Nav Bar */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--primary);
+  padding: 15px 20px;
   border-radius: var(--radius);
+  color: white;
+  position: relative;
 }
 
-header h1 {
-  font-size: 2rem;
+.nav-bar h1 {
+  font-size: 1.4rem;
   margin: 0;
 }
 
+.nav-links {
+  display: flex;
+  gap: 15px;
+  transition: max-height 0.3s ease;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  text-decoration: underline;
+}
+
+/* Burger Button */
+.burger {
+  font-size: 1.6rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .burger {
+    display: block;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    background: var(--primary);
+    position: absolute;
+    top: 58px;
+    right: 20px;
+    padding: 10px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: none;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+}
+
+/* Tages-Navigation Dropdown */
 .day-nav {
   display: flex;
   justify-content: center;
@@ -52,6 +107,7 @@ header h1 {
   border: 1px solid #ccc;
 }
 
+/* Zurück nach oben */
 .back-to-top {
   position: fixed;
   bottom: 25px;
@@ -73,6 +129,7 @@ header h1 {
   background: #0056b3;
 }
 
+/* Tagesinhalt */
 .day-card {
   background: white;
   border-radius: var(--radius);

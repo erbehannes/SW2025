@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sportwoche 2025 – Orga Planer</title>
+  <title>Helfer – Sportwoche 2025</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.png" />
@@ -13,10 +13,10 @@
   <div class="app-shell">
     <header>
       <div class="nav-bar">
-        <h1>📅 Sportwoche 2025</h1>
+        <h1>🧍‍♂️ Helfer-Planung</h1>
         <nav class="nav-links" id="nav-links">
-          <a href="index.html" class="active">Orga-Plan</a>
-          <a href="helfer.html">Helfer</a>
+          <a href="index.html">Orga-Plan</a>
+          <a href="helfer.html" class="active">Helfer</a>
           <a href="verpflegung.html">Essen & Getränke</a>
         </nav>
         <button class="burger" id="burger">☰</button>
@@ -28,19 +28,16 @@
     </nav>
 
     <main id="week-plan" class="week-plan">
-      <!-- Dynamisch durch JS -->
+      <!-- Inhalte durch app.js -->
     </main>
   </div>
 
   <button id="backToTop" class="back-to-top">⬆️</button>
 
   <script>
-    // Burger-Menü toggeln
     document.getElementById('burger').onclick = () => {
       document.getElementById('nav-links').classList.toggle('open');
     };
-
-    // Service Worker aktivieren
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
         .then(() => console.log('✅ SW aktiv'))
