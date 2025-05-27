@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
-// Firebase-Konfiguration
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyBvDHcYfeQdIwmXd3qnF97K-PQKH4NICf0",
   authDomain: "sportwoche-sv-langen.firebaseapp.com",
@@ -15,7 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Hilfsfunktionen
 function sanitizeKey(input) {
   return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
 }
@@ -25,7 +24,7 @@ function formatTime(ts) {
   return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
-// Eventdaten
+// ✅ Komplette Eventstruktur aus dem Flyer
 const events = {
   "Dienstag, 15.07.2025": [
     { time: "19:00", title: "Herrenspiele höhere Klassen" },
@@ -35,7 +34,30 @@ const events = {
     { time: "15:00–17:00", title: "Spiel- und Sportnachmittag (Grundschule 1–4)" },
     { time: "19:30", title: "SV Langen I – BW Papenburg I" }
   ],
-  // Weitere Tage hinzufügen ...
+  "Donnerstag, 17.07.2025": [
+    { time: "15:30–17:30", title: "Sportnachmittag bis 6 Jahre" },
+    { time: "18:30", title: "SV Langen II Turnier" },
+    { time: "19:30", title: "Damenspiel" },
+    { time: "20:15", title: "Finale Herrenturnier" }
+  ],
+  "Freitag, 18.07.2025": [
+    { time: "16:00", title: "Mini-Kicker Turnier" },
+    { time: "17:00", title: "Sportmania" },
+    { time: "18:00", title: "Alte Herren Turnier" },
+    { time: "20:00", title: "Aufstiegsmannschaftsspiel 2015" },
+    { time: "21:00", title: "Große Tagestombola" }
+  ],
+  "Samstag, 19.07.2025": [
+    { time: "10:00", title: "TTVN-Race Tischtennis" },
+    { time: "10:00", title: "LK-Tennisturnier" },
+    { time: "14:30", title: "Langen läuft Rund" }
+  ],
+  "Sonntag, 20.07.2025": [
+    { time: "10:30", title: "Familienmesse" },
+    { time: "14:30", title: "Dorfpokalturnier" },
+    { time: "15:00", title: "Kinderolympiade + Kaffee & Kuchen" },
+    { time: "17:00", title: "Große Tombola" }
+  ]
 };
 
 function renderPlan() {
@@ -47,13 +69,11 @@ function renderPlan() {
   Object.entries(events).forEach(([day, list]) => {
     const anchorId = sanitizeKey(day);
 
-    // Dropdown-Option
     const option = document.createElement('option');
     option.value = anchorId;
     option.textContent = day;
     navSelect.appendChild(option);
 
-    // Tagesbereich
     const dayCard = document.createElement('div');
     dayCard.className = 'day-card';
     dayCard.id = anchorId;
@@ -90,7 +110,6 @@ function renderPlan() {
       const notes = document.createElement('div');
       notes.className = 'notes';
 
-      // Daten laden
       onValue(dbRef, snapshot => {
         const data = snapshot.val() || { responsible: "", notes: [] };
         responsible.value = data.responsible || '';
@@ -117,7 +136,6 @@ function renderPlan() {
         });
       });
 
-      // Speichern
       saveBtn.onclick = async () => {
         const noteText = note.value.trim();
         if (!noteText && !responsible.value.trim()) return;
@@ -150,14 +168,13 @@ function renderPlan() {
     container.appendChild(dayCard);
   });
 
-  // Scroll beim Auswählen
   navSelect.onchange = () => {
     const id = navSelect.value;
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 }
 
-// ⬆️ Zurück nach oben
+// 🔼 Scroll to top
 const backBtn = document.getElementById('backToTop');
 window.addEventListener('scroll', () => {
   backBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
