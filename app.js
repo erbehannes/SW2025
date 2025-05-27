@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
-// 🔐 Firebase-Konfiguration
+// Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyBvDHcYfeQdIwmXd3qnF97K-PQKH4NICf0",
   authDomain: "sportwoche-sv-langen.firebaseapp.com",
@@ -15,7 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🔧 Hilfsfunktionen
 function sanitizeKey(input) {
   return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
 }
@@ -25,7 +24,6 @@ function formatTime(ts) {
   return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
-// 📅 Event-Daten
 const events = {
   "Dienstag, 15.07.2025": [
     { time: "19:00", title: "Herrenspiele höhere Klassen" },
@@ -63,11 +61,27 @@ const events = {
 
 function renderPlan() {
   const container = document.getElementById('week-plan');
+  const nav = document.getElementById('day-nav');
   container.innerHTML = '';
+  nav.innerHTML = '';
 
-  Object.entries(events).forEach(([day, list]) => {
+  Object.entries(events).forEach(([day, list], dIndex) => {
+    const anchorId = sanitizeKey(day);
+
+    // Nav-Button erzeugen
+    const btn = document.createElement('button');
+    btn.textContent = day.split(',')[0];
+    btn.onclick = () => {
+      document.getElementById(anchorId)?.scrollIntoView({ behavior: 'smooth' });
+      document.querySelectorAll('.day-nav button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    if (dIndex === 0) btn.classList.add('active');
+    nav.appendChild(btn);
+
     const dayCard = document.createElement('div');
     dayCard.className = 'day-card';
+    dayCard.id = anchorId;
 
     const dayHeader = document.createElement('div');
     dayHeader.className = 'day-header';
@@ -75,7 +89,7 @@ function renderPlan() {
     dayCard.appendChild(dayHeader);
 
     list.forEach((item, i) => {
-      const key = `${sanitizeKey(day)}_${i}`;
+      const key = `${anchorId}_${i}`;
       const dbRef = ref(db, `events/${key}`);
 
       const eventEl = document.createElement('div');
@@ -101,7 +115,6 @@ function renderPlan() {
       const notes = document.createElement('div');
       notes.className = 'notes';
 
-      // 🔁 Daten laden & anzeigen
       onValue(dbRef, snapshot => {
         const data = snapshot.val() || { responsible: "", notes: [] };
         responsible.value = data.responsible || '';
@@ -109,35 +122,27 @@ function renderPlan() {
         (data.notes || []).forEach((n, index) => {
           const p = document.createElement('div');
           p.className = 'note-entry';
-          const timeText = `<strong>${formatTime(n.timestamp)}:</strong> ${n.text}`;
+          p.innerHTML = `<span><strong>${formatTime(n.timestamp)}:</strong> ${n.text}</span>`;
 
           const delBtn = document.createElement('button');
           delBtn.textContent = '🗑️';
-          delBtn.style.marginLeft = '10px';
-          delBtn.style.background = 'none';
-          delBtn.style.border = 'none';
-          delBtn.style.cursor = 'pointer';
-          delBtn.title = 'Notiz löschen';
-
           delBtn.onclick = async () => {
-            const confirmDel = confirm("Willst du diese Notiz wirklich löschen?");
+            const confirmDel = confirm("Diese Notiz löschen?");
             if (!confirmDel) return;
 
             const snap = await get(dbRef);
             const d = snap.val();
             if (d && d.notes) {
-              d.notes.splice(index, 1); // entfernen
-              await set(dbRef, d); // speichern
+              d.notes.splice(index, 1);
+              await set(dbRef, d);
             }
           };
 
-          p.innerHTML = timeText;
           p.appendChild(delBtn);
           notes.appendChild(p);
         });
       });
 
-      // 🔁 Speichern
       saveBtn.onclick = async () => {
         const noteText = note.value.trim();
         const newNote = { text: noteText, timestamp: Date.now() };

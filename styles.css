@@ -2,9 +2,9 @@
   --primary: #007bff;
   --primary-light: #e7f1ff;
   --success: #28a745;
+  --danger: #dc3545;
   --bg: #f4f6f8;
   --text: #212529;
-  --muted: #6c757d;
   --radius: 8px;
   --shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   --font: "Segoe UI", Roboto, sans-serif;
@@ -15,6 +15,7 @@ body {
   font-family: var(--font);
   background-color: var(--bg);
   color: var(--text);
+  scroll-behavior: smooth;
 }
 
 .app-shell {
@@ -25,7 +26,6 @@ body {
 
 header {
   text-align: center;
-  margin-bottom: 30px;
   background-color: var(--primary);
   color: white;
   padding: 20px 10px;
@@ -37,12 +37,44 @@ header h1 {
   margin: 0;
 }
 
+/* 📌 Sticky Navigation */
+.day-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 99;
+  padding: 10px 0;
+  box-shadow: var(--shadow);
+}
+
+.day-nav button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.day-nav button:hover,
+.day-nav button.active {
+  background: #0056b3;
+}
+
 .day-card {
   background: white;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   margin-bottom: 30px;
   overflow: hidden;
+  scroll-margin-top: 100px;
 }
 
 .day-header {
@@ -58,12 +90,7 @@ header h1 {
   border-top: 1px solid #eee;
   padding: 16px;
   display: grid;
-  grid-template-columns: 1fr;
   gap: 10px;
-}
-
-.event:first-of-type {
-  border-top: none;
 }
 
 .event-title {
@@ -96,7 +123,7 @@ textarea:focus {
 }
 
 button {
-  padding: 10px 16px;
+  padding: 10px 14px;
   background-color: var(--success);
   color: white;
   border: none;
@@ -122,11 +149,27 @@ button:hover {
   border-left: 3px solid var(--primary);
   padding-left: 10px;
   color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-entry button {
+  background: none;
+  color: var(--danger);
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
   .input-grid {
     grid-template-columns: 1fr;
+  }
+
+  .day-nav {
+    flex-direction: column;
+    align-items: center;
   }
 
   button {
