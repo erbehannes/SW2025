@@ -15,9 +15,10 @@
       <h1>📅 Sportwoche 2025 – Orga Planer</h1>
     </header>
 
-    <!-- Navigationsleiste für Tages-Jump -->
-    <nav class="day-nav" id="day-nav">
-      <!-- JS erzeugt Buttons -->
+    <!-- Navigation: Buttons + Dropdown -->
+    <nav class="day-nav">
+      <div id="day-buttons"></div>
+      <select id="day-select" class="day-select"></select>
     </nav>
 
     <main id="week-plan" class="week-plan">
@@ -25,11 +26,10 @@
     </main>
   </div>
 
-  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('✅ Service Worker aktiv'))
+        .then(() => console.log('✅ SW aktiv'))
         .catch(err => console.error('❌ SW Fehler:', err));
     }
   </script>

@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
-// Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyBvDHcYfeQdIwmXd3qnF97K-PQKH4NICf0",
   authDomain: "sportwoche-sv-langen.firebaseapp.com",
@@ -61,23 +60,31 @@ const events = {
 
 function renderPlan() {
   const container = document.getElementById('week-plan');
-  const nav = document.getElementById('day-nav');
+  const navButtons = document.getElementById('day-buttons');
+  const navSelect = document.getElementById('day-select');
   container.innerHTML = '';
-  nav.innerHTML = '';
+  navButtons.innerHTML = '';
+  navSelect.innerHTML = '';
 
   Object.entries(events).forEach(([day, list], dIndex) => {
     const anchorId = sanitizeKey(day);
 
-    // Nav-Button erzeugen
+    // 📌 Button für Desktop
     const btn = document.createElement('button');
     btn.textContent = day.split(',')[0];
     btn.onclick = () => {
       document.getElementById(anchorId)?.scrollIntoView({ behavior: 'smooth' });
-      document.querySelectorAll('.day-nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#day-buttons button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     };
     if (dIndex === 0) btn.classList.add('active');
-    nav.appendChild(btn);
+    navButtons.appendChild(btn);
+
+    // 📱 Option für Dropdown
+    const option = document.createElement('option');
+    option.value = anchorId;
+    option.textContent = day;
+    navSelect.appendChild(option);
 
     const dayCard = document.createElement('div');
     dayCard.className = 'day-card';
@@ -174,6 +181,11 @@ function renderPlan() {
 
     container.appendChild(dayCard);
   });
+
+  navSelect.onchange = () => {
+    const id = navSelect.value;
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
 }
 
 document.addEventListener('DOMContentLoaded', renderPlan);
