@@ -37,52 +37,21 @@ header h1 {
   margin: 0;
 }
 
-/* Navigation (Buttons + Dropdown) */
 .day-nav {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0;
-  background: var(--bg);
-  z-index: 99;
-}
-
-#day-buttons {
-  display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-}
-
-.day-nav button {
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: var(--radius);
-  background: var(--primary);
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.day-nav button:hover,
-.day-nav button.active {
-  background: #0056b3;
+  margin: 20px 0;
 }
 
 .day-select {
-  display: block;
   width: 100%;
   max-width: 320px;
   font-size: 1rem;
   padding: 8px;
   border-radius: var(--radius);
   border: 1px solid #ccc;
-  margin-top: 10px;
 }
 
-/* Zurück nach oben */
 .back-to-top {
   position: fixed;
   bottom: 25px;
@@ -104,7 +73,6 @@ header h1 {
   background: #0056b3;
 }
 
-/* Tageskarten */
 .day-card {
   background: white;
   border-radius: var(--radius);
@@ -135,7 +103,6 @@ header h1 {
   color: var(--text);
 }
 
-/* Eingabefelder */
 .input-grid {
   display: grid;
   grid-template-columns: 1fr 2fr auto;
@@ -173,7 +140,6 @@ button:hover {
   background-color: #1e7e34;
 }
 
-/* Notizenbereich */
 .notes {
   background: var(--primary-light);
   padding: 10px;
