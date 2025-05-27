@@ -1,4 +1,4 @@
-const cacheName = 'sportwoche-cache-v2';
+const cacheName = 'sportwoche-cache-v1';
 const filesToCache = [
   './',
   './index.html',

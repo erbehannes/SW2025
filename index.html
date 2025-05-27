@@ -15,25 +15,31 @@
       <h1>📅 Sportwoche 2025 – Orga Planer</h1>
     </header>
 
-    <!-- Navigation: Buttons + Dropdown -->
+    <!-- Navigation für Tag-Auswahl -->
     <nav class="day-nav">
       <div id="day-buttons"></div>
       <select id="day-select" class="day-select"></select>
     </nav>
 
+    <!-- Inhaltlicher Bereich -->
     <main id="week-plan" class="week-plan">
-      <!-- Inhalte durch app.js -->
+      <!-- JS füllt Inhalte dynamisch -->
     </main>
   </div>
 
+  <!-- Nach oben Button -->
+  <button id="backToTop" class="back-to-top">⬆️</button>
+
+  <!-- Service Worker Registrierung -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('✅ SW aktiv'))
+        .then(() => console.log('✅ Service Worker registriert'))
         .catch(err => console.error('❌ SW Fehler:', err));
     }
   </script>
 
+  <!-- Haupt-JavaScript Modul -->
   <script type="module" src="app.js"></script>
 </body>
 </html>

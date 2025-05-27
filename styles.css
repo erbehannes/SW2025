@@ -37,6 +37,7 @@ header h1 {
   margin: 0;
 }
 
+/* Navigation (Buttons + Dropdown) */
 .day-nav {
   display: flex;
   flex-direction: column;
@@ -71,25 +72,39 @@ header h1 {
 }
 
 .day-select {
-  display: none;
-  width: 90%;
-  max-width: 300px;
+  display: block;
+  width: 100%;
+  max-width: 320px;
   font-size: 1rem;
   padding: 8px;
   border-radius: var(--radius);
   border: 1px solid #ccc;
+  margin-top: 10px;
 }
 
-@media (max-width: 768px) {
-  #day-buttons {
-    display: none;
-  }
-
-  .day-select {
-    display: block;
-  }
+/* Zurück nach oben */
+.back-to-top {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: none;
+  box-shadow: var(--shadow);
+  z-index: 200;
 }
 
+.back-to-top:hover {
+  background: #0056b3;
+}
+
+/* Tageskarten */
 .day-card {
   background: white;
   border-radius: var(--radius);
@@ -120,6 +135,7 @@ header h1 {
   color: var(--text);
 }
 
+/* Eingabefelder */
 .input-grid {
   display: grid;
   grid-template-columns: 1fr 2fr auto;
@@ -157,6 +173,7 @@ button:hover {
   background-color: #1e7e34;
 }
 
+/* Notizenbereich */
 .notes {
   background: var(--primary-light);
   padding: 10px;

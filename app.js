@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
 
+// Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyBvDHcYfeQdIwmXd3qnF97K-PQKH4NICf0",
   authDomain: "sportwoche-sv-langen.firebaseapp.com",
@@ -14,6 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// Hilfsfunktionen
 function sanitizeKey(input) {
   return input.replace(/[^\w\s]/g, '').replace(/\s+/g, '_');
 }
@@ -23,6 +25,7 @@ function formatTime(ts) {
   return `${d.toLocaleDateString('de-DE')} – ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
+// Eventdaten eintragen
 const events = {
   "Dienstag, 15.07.2025": [
     { time: "19:00", title: "Herrenspiele höhere Klassen" },
@@ -58,6 +61,7 @@ const events = {
   ]
 };
 
+// UI aufbauen
 function renderPlan() {
   const container = document.getElementById('week-plan');
   const navButtons = document.getElementById('day-buttons');
@@ -69,7 +73,7 @@ function renderPlan() {
   Object.entries(events).forEach(([day, list], dIndex) => {
     const anchorId = sanitizeKey(day);
 
-    // 📌 Button für Desktop
+    // Button Navigation
     const btn = document.createElement('button');
     btn.textContent = day.split(',')[0];
     btn.onclick = () => {
@@ -80,12 +84,13 @@ function renderPlan() {
     if (dIndex === 0) btn.classList.add('active');
     navButtons.appendChild(btn);
 
-    // 📱 Option für Dropdown
+    // Dropdown Option
     const option = document.createElement('option');
     option.value = anchorId;
     option.textContent = day;
     navSelect.appendChild(option);
 
+    // Tagesbereich
     const dayCard = document.createElement('div');
     dayCard.className = 'day-card';
     dayCard.id = anchorId;
@@ -134,9 +139,7 @@ function renderPlan() {
           const delBtn = document.createElement('button');
           delBtn.textContent = '🗑️';
           delBtn.onclick = async () => {
-            const confirmDel = confirm("Diese Notiz löschen?");
-            if (!confirmDel) return;
-
+            if (!confirm("Diese Notiz löschen?")) return;
             const snap = await get(dbRef);
             const d = snap.val();
             if (d && d.notes) {
@@ -152,7 +155,7 @@ function renderPlan() {
 
       saveBtn.onclick = async () => {
         const noteText = note.value.trim();
-        const newNote = { text: noteText, timestamp: Date.now() };
+        if (!noteText && !responsible.value.trim()) return;
 
         const snapshot = await get(dbRef);
         const data = snapshot.val() || { responsible: "", notes: [] };
@@ -162,7 +165,7 @@ function renderPlan() {
         };
 
         if (noteText) {
-          updated.notes.push(newNote);
+          updated.notes.push({ text: noteText, timestamp: Date.now() });
         }
 
         await set(dbRef, updated);
@@ -187,5 +190,14 @@ function renderPlan() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 }
+
+// ⬆️ Nach oben Button
+const backBtn = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  backBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+});
+backBtn.onclick = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 document.addEventListener('DOMContentLoaded', renderPlan);
